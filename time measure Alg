@@ -1,0 +1,57 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <windows.h>
+
+int *prefix1(int X[], int n);
+int *prefix2(int X[], int n);
+int main() {
+  int n;
+  scanf("%d", &n);
+
+  srand(time(NULL));
+  int *X;
+  X = (int *)malloc(n * sizeof(int));
+  for (int i = 0; i < n; i++) {
+    X[i] = (rand() % 10000 + 1);
+  }
+  // X의 크기 동적할당후 X 배열에 1~10,000까지의 난수를 집어넣음.
+  clock_t start = clock();
+  int *A1 = prefix1(X, n);
+  clock_t end = clock();
+  printf("%lfms\n", (double)(end - start) / CLOCKS_PER_SEC);
+  clock_t start2 = clock();
+  int *A2 = prefix2(X, n);
+  clock_t end2 = clock();
+  printf("%lfms", (double)(end2 - start2) / CLOCKS_PER_SEC);
+  //각자 난수배열X에 대한 누적합의 평균들이 들어있는 새로운 배열 A1,2의 포인터
+  //인자임. 함수호출 완료
+
+  return 0;
+}
+
+int *prefix1(int X[], int n) {
+  int sum = 0;
+  int *A = (int *)malloc(n * sizeof(int));
+
+  for (int i = 0; i < n; i++) {
+    sum = 0; // i 번째 반복시 합을 초기화함.
+    for (int j = 0; j < i + 1; j++)
+      sum += X[j];        // i번째 까지의 합 대입
+    A[i] = sum / (i + 1); // i번째 원소는 X전체 배열의 평균값임.
+  }
+  return A; // A의 주소 반환
+}
+int *prefix2(int X[], int n) {
+  //이전의 i번째까지의 합을 보관하여 다음 반복으로 전달.
+  // ex) n = 3 , X[0,1,2] = 5 1 9 임
+  int sum = 0;
+  int *A = (int *)malloc(n * sizeof(int));
+
+  for (int i = 0; i < n; i++) {
+    sum += X[i];          // i = 0 일때 sum += X[0] 이므로 sum = 5
+    A[i] = sum / (i + 1); // A[0] = 5/ 1 = 5
+    // i = 1 일때 sum = 5 + X[1] = 5 + 1 = 6 이고 A[1] = 6 / 2 = 3
+  }
+  return A;
+}
