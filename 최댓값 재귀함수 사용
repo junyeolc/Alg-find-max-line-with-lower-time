@@ -1,0 +1,51 @@
+[ 문제 4 ] N (N 20), . 개의 정수를 입력 받아 ≤ 최댓값을 구하는 프로그램을 작성하시오
+입력 예시 1 
+5 ↦ N = 5
+4 1 8 3 7 ↦ 입력 정수
+출력 예시 1
+8 ↦ 최댓값
+◦ 다음 예에서 보여주는 재귀 관계를 이용하여 구현하시오 ( ). 재귀 함수 사용
+- : 예 (4, 1, 8, 3, 7)의 최댓값 ⇒ (4, 1, 8, 3)의 최댓값과 7중 큰 값
+
+
+
+#include <stdio.h>
+#pragma warning(disable : 4996)
+int recursive(int array[],int n);
+int main() {
+  int n;
+  scanf("%d", &n);
+  int array[20] = {0};
+  for (int i = 0; i < n; i++) {
+    scanf("%d", &array[i]);
+  }
+  //입력받기 끝
+  int result = 0;
+  result = recursive(array,n);
+  printf("%d",result);
+  return 0;
+}
+// 4 1 8 3 7의 최댓값 = 4 1 8 3 의 최댓값과 7중 큰값.
+int recursive(int array[],int n) {
+  int max = array[n-1];//최댓값 배열 끝값으로 고정시키고
+  int inmax = 0;
+  int result = 0;
+  int tmp;
+  
+  if(n == 1)
+    return array[0];
+  else{
+    for(int i=0;i<n-1;i++){
+    if(i == 0){
+      inmax = array[i];
+    }
+    else{
+      if(inmax < array[i])
+        inmax = array[i];
+    }
+  }//내부섹션에서 최댓값 구하기  
+  inmax = recursive(array,n-1);
+  result = inmax > max ? inmax : max;
+  return result;
+  }
+}
